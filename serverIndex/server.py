@@ -10,12 +10,8 @@ class RequestHandler(SimpleXMLRPCRequestHandler):
     rpc_paths = ('/RPC2',)
 # Create server
 hostIP=str(socket.gethostbyname(socket.gethostname()))
-#List of 55 numbers to use
-listNumbers = np.array([i for i in range(11)] * 5)
-#shuffle 55 numbers in random order
-random.shuffle(listNumbers)
-#divide th list in five parts
-parts = np.array_split(listNumbers, 5) 
+
+
 with SimpleXMLRPCServer((hostIP, 8000), requestHandler=RequestHandler) as server:
     server.register_introspection_functions()
 
@@ -24,9 +20,13 @@ with SimpleXMLRPCServer((hostIP, 8000), requestHandler=RequestHandler) as server
     class Index:
         def __init__(self)->None:
             self.registeredList={} #clients ips and names
+            #List of 55 numbers to use
+            self.listNumbers = np.array([i for i in range(11)] * 5)
+            #shuffle 55 numbers in random order
+            random.shuffle(listNumbers)
+            #divide th list in five parts
+            self.parts = np.array_split(listNumbers, 5) 
             
-         
-
         #Register a client
         def register(self, ip, name):
             self.registeredList[name]=ip
@@ -45,8 +45,15 @@ with SimpleXMLRPCServer((hostIP, 8000), requestHandler=RequestHandler) as server
                 sc.updateClientsList(cpRegisteredList)
                 
         def sendNumbersatRegisteredClients():
-            for i in parts:
-                return i
+            index = 0
+            for key in self.registeredList:
+                cpNumberList = self.parts[index]
+                IPClient = self.registeredList.get(key)
+                sc = xmlrpc.client.ServerProxy('http://'+IPClient+':8000')
+                sc.getReceivedNumbers(cpNumberList.list())
+                index += 1
+                if index >= len(self.parts):
+                    break
                       
     server.register_instance(Index())
 

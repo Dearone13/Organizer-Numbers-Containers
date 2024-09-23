@@ -3,6 +3,7 @@ import socket
 
 #----------------------------------------------------------------------------
 class Client:
+    numbersList = []
     def __init__(self, name, ipServerIndex):
         #Server index IP
         if(ipServerIndex==""):
@@ -18,6 +19,9 @@ class Client:
     def getClientsList(self):
         s = xmlrpc.client.ServerProxy('http://'+self.clientIP+':8000')
         self.clientsList=s.getClientsList()
+    def geListNumbers(self):
+        d = xmlrpc.client.ServerProxy('http://'+self.indexIP+':8000')
+        numbersList =  d.get
 
     #Send messages to all client partners
     def sendMessage(self, txt):
@@ -38,6 +42,7 @@ class Client:
     def registerMe(self):
         sIndex = xmlrpc.client.ServerProxy('http://'+self.indexIP+':8000')
         sIndex.register(self.clientIP, self.name)
+        
 #----------------------------------------------------------------------------
 
 #Terminal--------------------------------------------------------------------
