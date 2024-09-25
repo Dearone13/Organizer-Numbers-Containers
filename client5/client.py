@@ -42,10 +42,6 @@ class Client:
         sIndex = xmlrpc.client.ServerProxy('http://'+self.indexIP+':8000')
         sIndex.register(self.clientIP, self.name)
         
-    def registerMe(self):
-        sIndex = xmlrpc.client.ServerProxy('http://'+self.indexIP+':8000')
-        sIndex.send
-        
     def getNumbersList(self):
         s = xmlrpc.client.ServerProxy('http://'+self.clientIP+':8000')
         self.number = s.getNumbers()
