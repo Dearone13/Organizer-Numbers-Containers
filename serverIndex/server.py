@@ -20,31 +20,37 @@ with SimpleXMLRPCServer((hostIP, 8000), requestHandler=RequestHandler) as server
     class Index:
         def __init__(self)->None:
             self.registeredList={} #clients ips and names
-            #List of 55 numbers to use
-            self.listNumbers = np.array([i for i in range(11)] * 5)
-            #shuffle 55 numbers in random order
-            random.shuffle(listNumbers)
-            #divide th list in five parts
-            self.parts = np.array_split(listNumbers, 5) 
+            self.serverActive = 0  #count how many servers are on
+            self.listNumbers = []
+            self.parts = []
             
         #Register a client
         def register(self, ip, name):
             self.registeredList[name]=ip
             #Send clients IP to all clients
+            self.serverActive += 1 #For every server active add 1
+            #List of n*11 numbers to use counting th numbers of servers on
+            self.listNumbers =  np.array([i for i in range(11)] * self.serverActive)
+            #shuffle n*11 numbers in random order
+            random.shuffle(self.listNumbers)
+            #divide th list in five parts
+            self.parts = np.array_split(self.listNumbers, 5)
+             
             self.sendRegisteredClientsList()
+            self.sendNumbersatRegisteredClients()
             return self.registeredList
 
         #Send registered clients list to all clients
         def sendRegisteredClientsList(self):
-            print("Clients List:")
+            print("Clients List: " +str(self.serverActive))
             print(self.registeredList)
-            cpRegisteredList=self.registeredList
+            cpRegisteredList=self.listNumbers
             for key in self.registeredList:
                 IPClient = self.registeredList.get(key)
                 sc = xmlrpc.client.ServerProxy('http://'+IPClient+':8000')
                 sc.updateClientsList(cpRegisteredList)
                 
-        def sendNumbersatRegisteredClients():
+        def sendNumbersatRegisteredClients(self):
             index = 0 #Define a index for acces to parts
             for key in self.registeredList: 
                 cpNumberList = self.parts[index] #create a copy of  every numbers of parts

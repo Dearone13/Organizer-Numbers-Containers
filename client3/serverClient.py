@@ -16,6 +16,7 @@ with SimpleXMLRPCServer((hostIP, 8000), requestHandler=RequestHandler) as server
         def __init__(self):
             self.clientsList={}
             self.messages={}
+            self.numbers = []
 
         #Save all messages from others clients
         def receiveMessage(self, name,txt):

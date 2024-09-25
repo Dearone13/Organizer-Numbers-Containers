@@ -43,6 +43,7 @@ class Client:
     def getNumbersList(self):
         s = xmlrpc.client.ServerProxy('http://'+self.clientIP+':8000')
         self.number = s.getNumbers()
+        print("number list: "+ str(self.number))
 #----------------------------------------------------------------------------
 
 #Terminal--------------------------------------------------------------------

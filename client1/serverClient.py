@@ -16,6 +16,7 @@ with SimpleXMLRPCServer((hostIP, 8000), requestHandler=RequestHandler) as server
         def __init__(self):
             self.clientsList={}
             self.messages={}
+            self.numbers = []
 
         #Save all messages from others clients
         def receiveMessage(self, name,txt):
@@ -26,6 +27,9 @@ with SimpleXMLRPCServer((hostIP, 8000), requestHandler=RequestHandler) as server
         #obtain received messages (it is to client use only)
         def getReceivedMessages(self):
             return self.messages
+#----------------------------------------------------------------------------
+
+
 
         #Update clients list from index (it is to index server only)
         def updateClientsList(self, clientsList):
@@ -35,8 +39,8 @@ with SimpleXMLRPCServer((hostIP, 8000), requestHandler=RequestHandler) as server
         #obtain clients list (it is to client use only)    
         def getClientsList(self):
             return self.clientsList
-    #----------------------------------------------------------------------------
-         #obtain his 11 numbers from index
+    #-------------------------------------------------------------------------------  
+        #obtain his 11 numbers from index
         def updateReceivedNumbers(self,numbers):
             self.numbers = numbers;
             return 0
