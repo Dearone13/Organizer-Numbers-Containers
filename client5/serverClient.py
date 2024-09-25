@@ -33,13 +33,18 @@ with SimpleXMLRPCServer((hostIP, 8000), requestHandler=RequestHandler) as server
             self.clientsList=clientsList
             return 0
         
-        def getReceivedNumbers(self,numbers):
-            self.numbers = numbers;
-            return 0
-
         #obtain clients list (it is to client use only)    
         def getClientsList(self):
             return self.clientsList
+
+    #----------------------------------------------------------------------------
+        #obtain his 11 numbers from index
+        def updateReceivedNumbers(self,numbers):
+            self.numbers = numbers;
+            return 0
+        #obtain number list(it is to client use only)
+        def getNumbers(self):
+            return self.numbers
     #----------------------------------------------------------------------------
     server.register_instance(ServerClient())
 

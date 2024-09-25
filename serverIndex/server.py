@@ -45,15 +45,15 @@ with SimpleXMLRPCServer((hostIP, 8000), requestHandler=RequestHandler) as server
                 sc.updateClientsList(cpRegisteredList)
                 
         def sendNumbersatRegisteredClients():
-            index = 0
-            for key in self.registeredList:
-                cpNumberList = self.parts[index]
-                IPClient = self.registeredList.get(key)
-                sc = xmlrpc.client.ServerProxy('http://'+IPClient+':8000')
-                sc.getReceivedNumbers(cpNumberList.list())
-                index += 1
-                if index >= len(self.parts):
-                    break
+            index = 0 #Define a index for acces to parts
+            for key in self.registeredList: 
+                cpNumberList = self.parts[index] #create a copy of  every numbers of parts
+                IPClient = self.registeredList.get(key) #Bring serverClients ip
+                sc = xmlrpc.client.ServerProxy('http://'+IPClient+':8000')  #Activate serverClient
+                sc.updateReceivedNumbers(cpNumberList.list()) #Index give  list of 11 numbers
+                index += 1 #Increment index
+                if index >= len(self.parts): #When index is queal to lenght of part
+                    break #should stop the for and not iterate more because all the numbers
                       
     server.register_instance(Index())
 

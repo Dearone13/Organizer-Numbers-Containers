@@ -11,6 +11,7 @@ class Client:
                 self.indexIP=ipServerIndex
 
         self.clientsList={} #clients ips and names
+        self.number = [] # list of 11 numbers from index
         self.clientIP=str(socket.gethostbyname(socket.gethostname()))
         self.name=name
 
@@ -38,6 +39,10 @@ class Client:
     def registerMe(self):
         sIndex = xmlrpc.client.ServerProxy('http://'+self.indexIP+':8000')
         sIndex.register(self.clientIP, self.name)
+        
+    def getNumbersList(self):
+        s = xmlrpc.client.ServerProxy('http://'+self.clientIP+':8000')
+        self.number = s.getNumbers()
 #----------------------------------------------------------------------------
 
 #Terminal--------------------------------------------------------------------
@@ -55,6 +60,10 @@ while(True):
         elif(command=="get clients list"):
                 client.getClientsList()
                 print(client.clientsList)
+        elif(command=="get numbers list"):
+                #Define command for bring numbers list
+                client.getNumbersList()
+                print(client.number)
         elif(command=="help"):
                 print("send message: send a message to all clients")
                 print("get clients list: show the clients list")
