@@ -1,7 +1,7 @@
 from xmlrpc.server import SimpleXMLRPCServer
 from xmlrpc.server import SimpleXMLRPCRequestHandler
 import socket
-import numpy as np
+
 # Restrict to a particular path.
 class RequestHandler(SimpleXMLRPCRequestHandler):
     rpc_paths = ('/RPC2',)
@@ -17,6 +17,8 @@ with SimpleXMLRPCServer((hostIP, 8000), requestHandler=RequestHandler) as server
             self.clientsList={}
             self.messages={}
             self.numbers = []
+            self.unique = []
+            self.repeatedT = []
 
         #Save all messages from others clients
         def receiveMessage(self, name,txt):
@@ -28,8 +30,6 @@ with SimpleXMLRPCServer((hostIP, 8000), requestHandler=RequestHandler) as server
         def getReceivedMessages(self):
             return self.messages
 #----------------------------------------------------------------------------
-
-
 
         #Update clients list from index (it is to index server only)
         def updateClientsList(self, clientsList):
@@ -47,6 +47,18 @@ with SimpleXMLRPCServer((hostIP, 8000), requestHandler=RequestHandler) as server
         #obtain number list(it is to client use only)
         def getNumbers(self):
             return self.numbers
+    #Exchangue unique numbers------------------------------------
+
+        #send repeated form origin cleint to that server client(owner)
+        def updateRepeatedCopy(self, repeated):
+            self.repeatedT = repeated
+            print("Valor de los repeated"+ str(self.repeatedT))
+            return self.repeatedT
+        #return updated repeated list
+        def getRepeatedList(self):
+            print("Valor a retornar del get" +str(self.repeatedT))
+            return self.repeatedT
+     
     #----------------------------------------------------------------------------
     server.register_instance(ServerClient())
 

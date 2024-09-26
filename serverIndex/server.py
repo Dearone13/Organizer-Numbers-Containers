@@ -68,7 +68,7 @@ with SimpleXMLRPCServer((hostIP, 8000), requestHandler=RequestHandler) as server
                 index += 1  # Increment index
                 if index >= len(self.parts):  # When index is equal to length of part
                     break  # Stop the loop as all numbers have been sent
-                      
+                       
     server.register_instance(Index())
 
     # Run the server's main loop
