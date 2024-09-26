@@ -33,22 +33,31 @@ with SimpleXMLRPCServer((hostIP, 8000), requestHandler=RequestHandler) as server
             self.listNumbers = np.array([i for i in range(11)] * self.serverActive)
             # Shuffle n*11 numbers in random order
             random.shuffle(self.listNumbers)
-            # Divide the list into five parts
-            self.parts = np.array_split(self.listNumbers, 5)
+            # Divide the list into counter parts
+            self.parts = np.array_split(self.listNumbers, self.serverActive)
             self.sendRegisteredClientsList()
             self.sendNumbersatRegisteredClients()
             return self.registeredList
 
         # Send registered clients list to all clients
         def sendRegisteredClientsList(self):
-            print("Clients List: " + str(self.serverActive))
+            print("Clients List:")
             print(self.registeredList)
-            cpRegisteredList = self.listNumbers.tolist()  # Convert to list before sending
+            cpRegisteredList=self.registeredList
             for key in self.registeredList:
                 IPClient = self.registeredList.get(key)
-                sc = xmlrpc.client.ServerProxy('http://' + IPClient + ':8000')
+                sc = xmlrpc.client.ServerProxy('http://'+IPClient+':8000')
                 sc.updateClientsList(cpRegisteredList)
-                
+#----------------------------------------------------------------------------------------------------------------
+        # def sendRegisteredClientsList(self):
+        #     print("Clients List: " + str(self.serverActive))
+        #     print(self.registeredList)
+        #     cpRegisteredList = self.listNumbers.tolist()  # Convert to list before sending
+        #     for key in self.registeredList:
+        #         IPClient = self.registeredList.get(key)
+        #         sc = xmlrpc.client.ServerProxy('http://' + IPClient + ':8000')
+        #         sc.updateClientsList(cpRegisteredList)
+#-----------------------------------------------------------------------------------------------------------------
         def sendNumbersatRegisteredClients(self):
             index = 0  # Define an index for access to parts
             for key in self.registeredList: 

@@ -1,6 +1,6 @@
 import xmlrpc.client
 import socket
-
+import numpy as np
 #----------------------------------------------------------------------------
 class Client:
     def __init__(self, name, ipServerIndex):
@@ -12,6 +12,8 @@ class Client:
 
         self.clientsList={} #clients ips and names
         self.number = [] # list of 11 numbers from index
+        self.unique = [] #list of unique numbers
+        self.repeated = [] # list of repeated numbers
         self.clientIP=str(socket.gethostbyname(socket.gethostname()))
         self.name=name
 
@@ -45,7 +47,22 @@ class Client:
         self.number = s.getNumbers()
         print("number list: "+ str(self.number))
 #----------------------------------------------------------------------------
+    # Method for unique and repeated
+    def encontrar_unicos_y_repetidos(self, number):
+        conteo = np.unique(number, return_counts=True)
+        unicos = []
+        repetidos_list = []
 
+        for val, count in zip(conteo[0], conteo[1]):
+            if count == 1:  # Conteo[1] se asigno a count y verifica si solo existe una vez
+                unicos.append(val)  # Agrega el numero a unicos
+            elif count > 1:  # Si ese numero existe más de una vez
+                unicos.append(val)
+                repetidos_list.extend([val] * (count - 1))  # Añade los valores repetidos
+
+        print("Repetidos metodo" + str(repetidos_list))
+        print("unicos metodo" + str(unicos))
+        return unicos, repetidos_list
 #Terminal--------------------------------------------------------------------
 client=Client(input("Client name: "), input("Index Server IP (172.17.0.2): "))
 client.registerMe()
@@ -59,12 +76,15 @@ while(True):
         elif(command=="show received messages"):
                 print(client.showReceivedMessages())
         elif(command=="get clients list"):
+                
                 client.getClientsList()
                 print(client.clientsList)
         elif(command=="get numbers list"):
                 #Define command for bring numbers list
                 client.getNumbersList()
-                print(client.number)
+                # print(client.number)
+        elif(command=="get ru"):
+               client.unique, client.repeated = client.encontrar_unicos_y_repetidos(client.number)
         elif(command=="help"):
                 print("send message: send a message to all clients")
                 print("get clients list: show the clients list")

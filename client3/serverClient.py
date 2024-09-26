@@ -1,7 +1,7 @@
 from xmlrpc.server import SimpleXMLRPCServer
 from xmlrpc.server import SimpleXMLRPCRequestHandler
 import socket
-
+import numpy as np
 # Restrict to a particular path.
 class RequestHandler(SimpleXMLRPCRequestHandler):
     rpc_paths = ('/RPC2',)
@@ -27,22 +27,20 @@ with SimpleXMLRPCServer((hostIP, 8000), requestHandler=RequestHandler) as server
         #obtain received messages (it is to client use only)
         def getReceivedMessages(self):
             return self.messages
-#----------------------------------------------------------------------------
-
-
 
         #Update clients list from index (it is to index server only)
         def updateClientsList(self, clientsList):
             self.clientsList=clientsList
             return 0
-
+        
         #obtain clients list (it is to client use only)    
         def getClientsList(self):
             return self.clientsList
-    #-------------------------------------------------------------------------------  
+
+    #----------------------------------------------------------------------------
         #obtain his 11 numbers from index
         def updateReceivedNumbers(self,numbers):
-            self.numbers = numbers;
+            self.numbers = numbers
             return 0
         #obtain number list(it is to client use only)
         def getNumbers(self):

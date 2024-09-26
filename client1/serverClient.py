@@ -29,8 +29,6 @@ with SimpleXMLRPCServer((hostIP, 8000), requestHandler=RequestHandler) as server
             return self.messages
 #----------------------------------------------------------------------------
 
-
-
         #Update clients list from index (it is to index server only)
         def updateClientsList(self, clientsList):
             self.clientsList=clientsList
@@ -42,7 +40,7 @@ with SimpleXMLRPCServer((hostIP, 8000), requestHandler=RequestHandler) as server
     #-------------------------------------------------------------------------------  
         #obtain his 11 numbers from index
         def updateReceivedNumbers(self,numbers):
-            self.numbers = numbers;
+            self.numbers = numbers
             return 0
         #obtain number list(it is to client use only)
         def getNumbers(self):
