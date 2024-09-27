@@ -64,8 +64,8 @@ class Client:
                 unicos.append(val)
                 repetidos_list.extend([val] * (count - 1))  # Añade los valores repetidos
 
-        print("Repetidos metodo" + str(repetidos_list))
-        print("unicos metodo" + str(unicos))
+        print("Los valores repetidos son: " + str(repetidos_list))
+        print("Los valores únicos son: " + str(unicos))
         return unicos, repetidos_list
 
     # Method swap-------------------------------------------------------------------------------
@@ -100,7 +100,7 @@ class Client:
                 print("Nuevos datos repetidos sobrante: " + str(self.repeatedT))#print update
 
                 self.repeatedT = [int(num) for num in self.repeatedT]  # Convert list
-                s.updateRepeatedCopy(self.repeatedT) #send new repeatedList from container to update the repeatedList 
+                s.updateRepeatedCopy(self.repeatedT) #send new repeatedList from container to update the repeatedList
 
     #send repeatedNumbers to this numbersRepeated since serverClient
     def sendRepeated(self, selfIP, repeated):
@@ -119,7 +119,7 @@ class Client:
      
 
 # Terminal----------------------------------------------------------------------------------
-client = Client(input("Client name: "), input("Index Server IP (172.17.0.2): "))
+client = Client(input("Client name: "), (""))
 client.registerMe()
 while(True):
     # client1.showReceivedMessages()
@@ -130,24 +130,18 @@ while(True):
         client.sendMessage(input("message>>"))
     elif (command == "show received messages"):
         print(client.showReceivedMessages())
-    elif (command == "get clients list"):
+    elif (command == "start"):
         client.getClientsList()
         print(client.clientsList)
-    elif (command == "get numbers list"):
-        # Define command for bring numbers list
         client.getNumbersList()
-        # print(client.number)
-    elif (command == "get ru"):
         client.unique, client.repeated = client.encontrar_unicos_y_repetidos(client.number)
-    elif (command == "send repeatedList client"):
-        #Send repatedList this serverClient THSI CONTAINER(SELF) , no others
         client.sendRepeated(client.clientIP, client.repeated)
     elif (command == "swap"):
-        #Activate swap method (for communication between container to origin container)
         client.swap()
-    elif (command == "updated repeated list(after swap)"):
+    elif (command == "pswap"):
         client.repeated = client.updateRepeated(client.clientIP) #update my repeatedList change after swap from container origin 
         print("valor de repeat(client) after"+ str(client.repeated))
+        client.sendRepeated(client.clientIP, client.repeated)
     elif (command == "help"):
         print("send message: send a message to all clients")
         print("get clients list: show the clients list")
