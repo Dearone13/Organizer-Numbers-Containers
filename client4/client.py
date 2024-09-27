@@ -70,48 +70,50 @@ class Client:
 
     # Method swap-------------------------------------------------------------------------------
     def swap(self):
-        self.getClientsList()
-        for key in self.clientsList:
-            IPClient = self.clientsList.get(key)
-            if self.clientIP != IPClient:
-                s = xmlrpc.client.ServerProxy('http://' + str(IPClient) + ':8000')
-                self.repeatedT = np.array(s.getRepeatedList(), dtype=np.int64)
-                print("Dato del servidor: " + str(self.repeatedT))
+        self.getClientsList() #updated ClientList
+        for key in self.clientsList: #Scooch the Clients
+            IPClient = self.clientsList.get(key) #asigned ip of clientList other clients
+            if self.clientIP != IPClient: #When the ip is not the same of the client now
+                s = xmlrpc.client.ServerProxy('http://' + str(IPClient) + ':8000') #Bring conection
+                self.repeatedT = np.array(s.getRepeatedList(), dtype=np.int64) #Past numpy64 of getRepeatedList from serverClient of the other container
+                print("Dato del servidor: " + str(self.repeatedT)) #Print the repeated numbers of clientList
 
                 # Asegúrate de que 'unique' sea una lista, no un array de numpy
-                self.unique = list(self.unique)  # Conversión a lista
+                self.unique = list(self.unique)  # Convert to list
 
-                elementos_a_eliminar = []
+                elementos_a_eliminar = [] # list for index to numbers to eliminate
 
-                for index,repeat in enumerate(self.repeatedT):
-                    if repeat not in self.unique:
-                        self.unique.append(repeat)
-                        elementos_a_eliminar.append(index)
+                for index,repeat in enumerate(self.repeatedT): #evaluate the number(repeat) and assign index
+                    if repeat not in self.unique: #When number(repeat) is not in unique number of actual client
+                        self.unique.append(repeat) #add to unique from repeatedList of other client
+                        elementos_a_eliminar.append(index) #add index to eliminate number repeated
 
                 # Eliminar los elementos repetidos fuera del bucle
-                indices_a_eliminar = np.array(elementos_a_eliminar)
-                self.repeatedT = np.delete(self.repeatedT, indices_a_eliminar)
+                indices_a_eliminar = np.array(elementos_a_eliminar) #convert np index to eliminate
+                self.repeatedT = np.delete(self.repeatedT,indices_a_eliminar.astype(int)) #delete numbers with index of the numbers to eliminate
 
                 # Convertir de nuevo a numpy array si es necesario, para ordenar
-                self.unique = np.array(self.unique)
-                self.unique = np.sort(self.unique)
+                self.unique = np.array(self.unique) #convert to np
+                self.unique = np.sort(self.unique) #sort to np 
 
-                print("Nuevos datos únicos: " + str(self.unique))
-                print("Nuevos datos repetidos sobrante: " + str(self.repeatedT))
+                print("Nuevos datos únicos: " + str(self.unique)) #print updated
+                print("Nuevos datos repetidos sobrante: " + str(self.repeatedT))#print update
 
-                self.repeatedT = [int(num) for num in self.repeatedT]  # Conversión a lista
-                s.updateRepeatedCopy(self.repeatedT)
+                self.repeatedT = [int(num) for num in self.repeatedT]  # Convert list
+                s.updateRepeatedCopy(self.repeatedT) #send new repeatedList from container to update the repeatedList 
 
+    #send repeatedNumbers to this numbersRepeated since serverClient
     def sendRepeated(self, selfIP, repeated):
-        self.repeated = [int(num) for num in repeated]
-        s = xmlrpc.client.ServerProxy('http://' + str(selfIP) + ':8000')
-        s.updateRepeatedCopy(self.repeated)
+        self.repeated = [int(num) for num in repeated] #convert to list
+        s = xmlrpc.client.ServerProxy('http://' + str(selfIP) + ':8000') #Bring conection
+        s.updateRepeatedCopy(self.repeated) #send to serverClient
         return 0
-
+ 
+    #updated repeatedList this CLIENT(NO OTHERS) :)
     def updateRepeated(self, selfIP):
-        s = xmlrpc.client.ServerProxy('http://' + str(selfIP) + ':8000')
-        print("repeated before: " + str(self.repeated))
-        return s.getRepeatedList()
+        s = xmlrpc.client.ServerProxy('http://' + str(selfIP) + ':8000') #Bring conection
+        print("repeated before: " + str(self.repeated)) #repeatedList beafore update
+        return s.getRepeatedList() #return new repeatedList to client.repeatedList
         # print("repeated after: " + str(self.repeated))
         return self.repeated
      
@@ -138,11 +140,13 @@ while(True):
     elif (command == "get ru"):
         client.unique, client.repeated = client.encontrar_unicos_y_repetidos(client.number)
     elif (command == "send repeatedList client"):
+        #Send repatedList this serverClient THSI CONTAINER(SELF) , no others
         client.sendRepeated(client.clientIP, client.repeated)
     elif (command == "swap"):
+        #Activate swap method (for communication between container to origin container)
         client.swap()
     elif (command == "updated repeated list(after swap)"):
-        client.repeated = client.updateRepeated(client.clientIP)
+        client.repeated = client.updateRepeated(client.clientIP) #update my repeatedList change after swap from container origin 
         print("valor de repeat(client) after"+ str(client.repeated))
     elif (command == "help"):
         print("send message: send a message to all clients")
